@@ -8,9 +8,9 @@ namespace StoreOps.UI
         private readonly CustomerMenu _customerMenu;
         private readonly ConfigurationMenu _configurationMenu;
 
-        public Menu(CategoryService categoryService, ProductService productService, CustomerService customerService)
+        public Menu(CategoryService categoryService, ProductService productService, CustomerService customerService, SaleService saleService, EmailService emailService)
         {
-            _productMenu = new ProductMenu(productService, categoryService);
+            _productMenu = new ProductMenu(productService, categoryService, customerService, saleService, emailService);
             _customerMenu = new CustomerMenu(customerService);
             _configurationMenu = new ConfigurationMenu(categoryService);
         }
