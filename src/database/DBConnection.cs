@@ -16,8 +16,6 @@ namespace StoreOps.Database
 
                 var options = new DotEnvOptions(envFilePaths: new[] { "./.env" });
 
-
-                
                 DotEnv.Load(options);
 
                 var connectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING");
@@ -28,7 +26,9 @@ namespace StoreOps.Database
                     throw new Exception("A string de conexão ou o nome do banco de dados não foram fornecidos.");
                 }
 
-                var client = new MongoClient(connectionString);
+                var settings = MongoClientSettings.FromUrl(new MongoUrl(connectionString));
+                var client = new MongoClient(settings);
+                
                 Database = client.GetDatabase(databaseName);
 
                 Console.WriteLine($"Conectado com sucesso ao banco de dados '{databaseName}'.");
