@@ -32,7 +32,7 @@ namespace StoreOps.UI
                         _productMenu.ShowMenu();
                         break;
                     case "2":
-                        _customerMenu.ShowMenu();
+                        _customerMenu.ShowMenu().GetAwaiter().GetResult();
                         break;
                     case "3":
                         _configurationMenu.ShowMenu();
