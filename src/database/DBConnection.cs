@@ -12,7 +12,7 @@ namespace StoreOps.Database
         {
             try
             {
-                Console.WriteLine("Tentando se conectar ao banco de dados...");
+                Console.WriteLine("Tentando se conectar ao banco de dados..");
 
                 var options = new DotEnvOptions(envFilePaths: new[] { "./.env" });
 
