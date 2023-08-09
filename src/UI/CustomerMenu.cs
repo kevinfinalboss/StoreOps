@@ -1,5 +1,8 @@
 using StoreOps.Models;
 using StoreOps.Services;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace StoreOps.UI
 {
@@ -12,7 +15,7 @@ namespace StoreOps.UI
             _customerService = customerService;
         }
 
-        public void ShowMenu()
+        public async Task ShowMenu()
         {
             while (true)
             {
@@ -26,7 +29,7 @@ namespace StoreOps.UI
                 switch (option)
                 {
                     case "1":
-                        AddCustomer();
+                        await AddCustomer();
                         break;
                     case "2":
                         ViewCustomers();
@@ -43,71 +46,56 @@ namespace StoreOps.UI
             }
         }
 
-        private async void AddCustomer()
+        private async Task AddCustomer()
         {
-            try
+            Console.WriteLine("Informe o nome do cliente:");
+            string name = Console.ReadLine() ?? string.Empty;
+
+            Console.WriteLine("Informe a idade do cliente:");
+            int age = int.Parse(Console.ReadLine() ?? string.Empty);
+
+            Console.WriteLine("Informe o CPF do cliente:");
+            string cpf = Console.ReadLine() ?? string.Empty;
+
+            Console.WriteLine("Informe o e-mail do cliente:");
+            string email = Console.ReadLine() ?? string.Empty;
+
+            Console.WriteLine("Informe o número de telefone do cliente:");
+            string phoneNumber = Console.ReadLine() ?? string.Empty;
+
+            Customer customer = new()
             {
-                Console.WriteLine("Informe o nome do cliente:");
-                string name = Console.ReadLine() ?? string.Empty;
+                Name = name,
+                Age = age,
+                CPF = cpf,
+                Email = email,
+                PhoneNumber = phoneNumber
+            };
 
-                Console.WriteLine("Informe a idade do cliente:");
-                int age = int.Parse(Console.ReadLine() ?? string.Empty);
+            _customerService.AddCustomer(customer);
 
-                Console.WriteLine("Informe o CPF do cliente:");
-                string cpf = Console.ReadLine() ?? string.Empty;
+            Console.WriteLine("Cliente adicionado com sucesso!");
 
-                Console.WriteLine("Informe o e-mail do cliente:");
-                string email = Console.ReadLine() ?? string.Empty;
+            var emailService = new EmailService();
+            string subject = "Bem-vindo ao StoreOps!";
+            var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(15));
 
-                Console.WriteLine("Informe o número de telefone do cliente:");
-                string phoneNumber = Console.ReadLine() ?? string.Empty;
-
-                Customer customer =
-                    new()
-                    {
-                        Name = name,
-                        Age = age,
-                        CPF = cpf,
-                        Email = email,
-                        PhoneNumber = phoneNumber
-                    };
-
-                _customerService.AddCustomer(customer);
-
-                Console.WriteLine("Cliente adicionado com sucesso!");
-
-                var emailService = new EmailService();
-                string subject = "Bem-vindo ao StoreOps!";
-                var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(15));
-
-                for (int attempt = 0; attempt < 2; attempt++)
+            for (int attempt = 0; attempt < 2; attempt++)
+            {
+                try
                 {
-                    try
-                    {
-                        await emailService.SendEmailAsync(
-                            email,
-                            subject,
-                            name,
-                            cancellationTokenSource.Token
-                        );
-                        Console.WriteLine("E-mail enviado com sucesso!");
-                        break;
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        Console.WriteLine(
-                            "Erro ao enviar e-mail: a operação atingiu o tempo limite."
-                        );
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Erro ao enviar e-mail: {ex.Message}");
-                    }
+                    await emailService.SendEmailAsync(email, subject, name, cancellationTokenSource.Token);
+                    Console.WriteLine("E-mail enviado com sucesso!");
+                    break;
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erro ao adicionar cliente: {ex.Message}");
+                catch (OperationCanceledException)
+                {
+                    Console.WriteLine("Erro ao enviar e-mail: a operação atingiu o tempo limite.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Erro ao enviar e-mail: {ex.Message}");
+                }
             }
         }
 
