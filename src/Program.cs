@@ -10,8 +10,9 @@ namespace StoreOps
             Console.WriteLine("Bem-vindo ao StoreOps");
             var databaseConnection = new DatabaseConnection();
             var categoryService = new CategoryService(databaseConnection);
+            var productService = new ProductService(databaseConnection);
 
-            var menu = new Menu(categoryService);
+            var menu = new Menu(categoryService, productService);
 
             menu.ShowMenu();
         }
