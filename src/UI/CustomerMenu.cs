@@ -43,7 +43,7 @@ namespace StoreOps.UI
             }
         }
 
-        private void AddCustomer()
+        private async void AddCustomer()
         {
             try
             {
@@ -62,18 +62,48 @@ namespace StoreOps.UI
                 Console.WriteLine("Informe o número de telefone do cliente:");
                 string phoneNumber = Console.ReadLine() ?? string.Empty;
 
-                Customer customer = new()
-                {
-                    Name = name,
-                    Age = age,
-                    CPF = cpf,
-                    Email = email,
-                    PhoneNumber = phoneNumber
-                };
+                Customer customer =
+                    new()
+                    {
+                        Name = name,
+                        Age = age,
+                        CPF = cpf,
+                        Email = email,
+                        PhoneNumber = phoneNumber
+                    };
 
                 _customerService.AddCustomer(customer);
 
                 Console.WriteLine("Cliente adicionado com sucesso!");
+
+                var emailService = new EmailService();
+                string subject = "Bem-vindo ao StoreOps!";
+                var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+
+                for (int attempt = 0; attempt < 2; attempt++)
+                {
+                    try
+                    {
+                        await emailService.SendEmailAsync(
+                            email,
+                            subject,
+                            name,
+                            cancellationTokenSource.Token
+                        );
+                        Console.WriteLine("E-mail enviado com sucesso!");
+                        break;
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        Console.WriteLine(
+                            "Erro ao enviar e-mail: a operação atingiu o tempo limite."
+                        );
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Erro ao enviar e-mail: {ex.Message}");
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -81,14 +111,8 @@ namespace StoreOps.UI
             }
         }
 
-        private void ViewCustomers()
-        {
-            
-        }
+        private void ViewCustomers() { }
 
-        private void DeleteCustomer()
-        {
-            
-        }
+        private void DeleteCustomer() { }
     }
 }
