@@ -99,7 +99,35 @@ namespace StoreOps.UI
             }
         }
 
-        private void ViewCustomers() { }
+        private void ViewCustomers()
+        {
+            Console.WriteLine("1 - Ver todos os clientes");
+            Console.WriteLine("2 - Pesquisar cliente");
+            string option = Console.ReadLine() ?? string.Empty;
+
+            switch (option)
+            {
+                case "1":
+                    var allCustomers = _customerService.GetCustomers();
+                    foreach (var customer in allCustomers)
+                    {
+                        Console.WriteLine($"Nome: {customer.Name}, Idade: {customer.Age}, CPF: {customer.CPF}, Email: {customer.Email}, Telefone: {customer.PhoneNumber}");
+                    }
+                    break;
+                case "2":
+                    Console.WriteLine("Digite a pesquisa (nome, idade, CPF, email, telefone):");
+                    string search = Console.ReadLine() ?? string.Empty;
+                    var customers = _customerService.SearchCustomers(search);
+                    foreach (var customer in customers)
+                    {
+                        Console.WriteLine($"Nome: {customer.Name}, Idade: {customer.Age}, CPF: {customer.CPF}, Email: {customer.Email}, Telefone: {customer.PhoneNumber}");
+                    }
+                    break;
+                default:
+                    Console.WriteLine("Opção inválida!");
+                    break;
+            }
+        }
 
         private void DeleteCustomer() { }
     }
