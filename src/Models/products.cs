@@ -7,7 +7,7 @@ namespace StoreOps.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [BsonElement("Name")]
         public required string Name { get; set; }
@@ -21,6 +21,9 @@ namespace StoreOps.Models
         [BsonElement("CategoryId")]
         [BsonRepresentation(BsonType.ObjectId)]
         public required string CategoryId { get; set; }
+
+        [BsonElement("Stock")]
+        public int Stock { get; set; }
 
         [BsonIgnore]
         public required Category Category { get; set; }
