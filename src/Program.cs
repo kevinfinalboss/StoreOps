@@ -1,4 +1,5 @@
 ﻿using System;
+using StoreOps.Database;
 
 namespace StoreOps
 {
@@ -7,6 +8,8 @@ namespace StoreOps
         static void Main(string[] args)
         {
             Console.WriteLine("Bem-vindo ao StoreOps");
+
+            var dbConnection = new DatabaseConnection();
 
             Menu menu = new Menu();
 
