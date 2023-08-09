@@ -1,5 +1,6 @@
 using StoreOps.Models;
 using StoreOps.Services;
+using System;
 
 namespace StoreOps.UI
 {
@@ -20,7 +21,7 @@ namespace StoreOps.UI
             {
                 Console.WriteLine("Menu de Produtos:");
                 Console.WriteLine("1 - Registrar Produto");
-                Console.WriteLine("2 - Vender Produto");
+                Console.WriteLine("2 - Ver Produtos");
                 Console.WriteLine("3 - Deletar Produto");
                 Console.WriteLine("0 - Voltar ao Menu Principal");
                 string option = Console.ReadLine() ?? string.Empty;
@@ -31,6 +32,7 @@ namespace StoreOps.UI
                         AddProduct();
                         break;
                     case "2":
+                        ViewProducts();
                         break;
                     case "3":
                         break;
@@ -40,6 +42,36 @@ namespace StoreOps.UI
                         Console.WriteLine("Opção inválida!");
                         break;
                 }
+            }
+        }
+
+        private void ViewProducts()
+        {
+            Console.WriteLine("1 - Ver Todos os Produtos");
+            Console.WriteLine("2 - Pesquisar Produtos");
+            string option = Console.ReadLine() ?? string.Empty;
+
+            if (option == "1")
+            {
+                var products = _productService.GetProducts();
+                foreach (var product in products)
+                {
+                    Console.WriteLine($"{product.Name} - {product.Description} - {product.Price:C} - {product.Stock} unidades");
+                }
+            }
+            else if (option == "2")
+            {
+                Console.WriteLine("Informe a busca:");
+                string search = Console.ReadLine() ?? string.Empty;
+                var products = _productService.SearchProducts(search);
+                foreach (var product in products)
+                {
+                    Console.WriteLine($"{product.Name} - {product.Description} - {product.Price:C} - {product.Stock} unidades");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Opção inválida!");
             }
         }
 
