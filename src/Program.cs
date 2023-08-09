@@ -1,5 +1,4 @@
-﻿using System;
-using StoreOps.Database;
+﻿using StoreOps.Database;
 
 namespace StoreOps
 {
@@ -12,7 +11,7 @@ namespace StoreOps
 
             Menu menu = new();
 
-            menu.ShowMenu();
+            Menu.ShowMenu();
         }
     }
 }
