@@ -1,6 +1,7 @@
 using MongoDB.Driver;
 using StoreOps.Database;
 using StoreOps.Models;
+using System.Collections.Generic;
 
 namespace StoreOps.Services
 {
@@ -17,6 +18,11 @@ namespace StoreOps.Services
         {
             _categories.InsertOne(category);
             return category;
+        }
+
+        public List<Category> GetCategories()
+        {
+            return _categories.Find(category => true).ToList();
         }
     }
 }
