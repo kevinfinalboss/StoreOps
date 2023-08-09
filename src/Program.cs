@@ -8,10 +8,9 @@ namespace StoreOps
         static void Main(string[] args)
         {
             Console.WriteLine("Bem-vindo ao StoreOps");
+            _ = new DatabaseConnection();
 
-            var dbConnection = new DatabaseConnection();
-
-            Menu menu = new Menu();
+            Menu menu = new();
 
             menu.ShowMenu();
         }
