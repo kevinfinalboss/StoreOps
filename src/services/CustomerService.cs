@@ -2,6 +2,7 @@ using MongoDB.Driver;
 using StoreOps.Database;
 using MongoDB.Bson;
 using StoreOps.Models;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace StoreOps.Services
@@ -31,6 +32,16 @@ namespace StoreOps.Services
             return _customers.Find(customer => true).ToList();
         }
 
+        public List<Customer> SearchCustomers(string search)
+        {
+            return _customers.Find(customer =>
+                customer.Name.Contains(search) ||
+                customer.Age.ToString().Contains(search) ||
+                customer.CPF.Contains(search) ||
+                customer.Email.Contains(search) ||
+                customer.PhoneNumber.Contains(search)).ToList();
+        }
+
         public void DeleteCustomer(ObjectId id)
         {
             _customers.DeleteOne(customer => customer.Id == id);
@@ -38,15 +49,8 @@ namespace StoreOps.Services
 
         private bool IsValidEmail(string email)
         {
-            try
-            {
-                var regexPattern = @"^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$";
-                return Regex.IsMatch(email, regexPattern);
-            }
-            catch
-            {
-                return false;
-            }
+            var regexPattern = @"^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$";
+            return Regex.IsMatch(email, regexPattern);
         }
 
         private string FormatCPF(string cpf)
