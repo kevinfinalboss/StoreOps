@@ -31,7 +31,6 @@ namespace StoreOps.UI
                         AddProduct();
                         break;
                     case "2":
-
                         break;
                     case "3":
                         break;
@@ -70,24 +69,38 @@ namespace StoreOps.UI
                 }
 
                 string selectedCategoryIndexInput = Console.ReadLine() ?? string.Empty;
-                int selectedCategoryIndex = int.Parse(selectedCategoryIndexInput) - 1;
-                var selectedCategory = categories[selectedCategoryIndex];
-
-                Product product =
-                    new()
+                if (int.TryParse(selectedCategoryIndexInput, out int selectedCategoryIndex))
+                {
+                    selectedCategoryIndex -= 1;
+                    if (selectedCategoryIndex >= 0 && selectedCategoryIndex < categories.Count)
                     {
-                        Id = null,
-                        Name = name,
-                        Description = description,
-                        Price = price,
-                        Stock = stock,
-                        CategoryId = selectedCategory.Id,
-                        Category = selectedCategory
-                    };
+                        var selectedCategory = categories[selectedCategoryIndex];
 
-                _productService.AddProduct(product);
+                        Product product =
+                            new()
+                            {
+                                Id = null,
+                                Name = name,
+                                Description = description,
+                                Price = price,
+                                Stock = stock,
+                                CategoryId = selectedCategory.Id,
+                                Category = selectedCategory
+                            };
 
-                Console.WriteLine("Produto adicionado com sucesso!");
+                        _productService.AddProduct(product);
+
+                        Console.WriteLine("Produto adicionado com sucesso!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Índice fora dos limites!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Entrada inválida!");
+                }
             }
             catch (Exception ex)
             {
@@ -96,3 +109,4 @@ namespace StoreOps.UI
         }
     }
 }
+
