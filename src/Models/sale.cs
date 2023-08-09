@@ -4,6 +4,12 @@ using System;
 
 namespace StoreOps.Models
 {
+    public enum PaymentMethod
+    {
+        Cash,
+        Card
+    }
+
     public class Sale
     {
         [BsonId]
@@ -17,7 +23,7 @@ namespace StoreOps.Models
         public string CustomerId { get; set; }
 
         [BsonElement("PaymentMethod")]
-        public string PaymentMethod { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
 
         [BsonElement("SaleDate")]
         public DateTime SaleDate { get; set; }
