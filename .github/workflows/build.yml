@@ -19,13 +19,13 @@ jobs:
         dotnet-version: '7.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore ./src/StoreOps/StoreOps.csproj
+      run: dotnet restore ./src/StoreOps.csproj
 
     - name: Build
-      run: dotnet build ./src/StoreOps/StoreOps.csproj --configuration Release
+      run: dotnet build ./src/StoreOps.csproj --configuration Release
 
     - name: Test
       run: echo "Sem testes"
 
     - name: Publish
-      run: dotnet publish ./src/StoreOps/StoreOps.csproj --configuration Release --output ./out
+      run: dotnet publish ./src/StoreOps.csproj --configuration Release --output ./out
