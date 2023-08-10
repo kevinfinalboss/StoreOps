@@ -31,7 +31,7 @@ namespace StoreOps.UI
         public void ShowMenu()
         {
             while (true)
-            {   
+            {
                 Console.WriteLine(FiggleFonts.Standard.Render("Products"));
                 Console.WriteLine("========================================");
                 Console.WriteLine("               Menu Principal           ");
@@ -109,12 +109,18 @@ namespace StoreOps.UI
                 string description = Console.ReadLine() ?? string.Empty;
 
                 Console.WriteLine("Informe o preço do produto:");
-                string priceInput = Console.ReadLine() ?? string.Empty;
-                decimal price = decimal.Parse(priceInput);
+                if (!decimal.TryParse(Console.ReadLine() ?? string.Empty, out decimal price))
+                {
+                    Console.WriteLine("Preço inválido!");
+                    return;
+                }
 
                 Console.WriteLine("Informe o estoque do produto:");
-                string stockInput = Console.ReadLine() ?? string.Empty;
-                int stock = int.Parse(stockInput);
+                if (!int.TryParse(Console.ReadLine() ?? string.Empty, out int stock))
+                {
+                    Console.WriteLine("Estoque inválido!");
+                    return;
+                }
 
                 Console.WriteLine("Selecione a categoria do produto:");
                 var categories = _categoryService.GetCategories();
@@ -171,11 +177,17 @@ namespace StoreOps.UI
                 var products = _productService.GetProducts();
                 for (int i = 0; i < products.Count; i++)
                 {
-                    Console.WriteLine($"{i + 1} - {products[i].Name} - {products[i].Price:C} - {products[i].Stock} unidades");
+                    Console.WriteLine(
+                        $"{i + 1} - {products[i].Name} - {products[i].Price:C} - {products[i].Stock} unidades"
+                    );
                 }
 
                 string selectedProductIndexInput = Console.ReadLine() ?? string.Empty;
-                if (int.TryParse(selectedProductIndexInput, out int selectedProductIndex) && selectedProductIndex > 0 && selectedProductIndex <= products.Count)
+                if (
+                    int.TryParse(selectedProductIndexInput, out int selectedProductIndex)
+                    && selectedProductIndex > 0
+                    && selectedProductIndex <= products.Count
+                )
                 {
                     selectedProductIndex -= 1;
                     var selectedProduct = products[selectedProductIndex];
@@ -188,14 +200,23 @@ namespace StoreOps.UI
                     }
 
                     string selectedCustomerIndexInput = Console.ReadLine() ?? string.Empty;
-                    if (int.TryParse(selectedCustomerIndexInput, out int selectedCustomerIndex) && selectedCustomerIndex > 0 && selectedCustomerIndex <= customers.Count)
+                    if (
+                        int.TryParse(selectedCustomerIndexInput, out int selectedCustomerIndex)
+                        && selectedCustomerIndex > 0
+                        && selectedCustomerIndex <= customers.Count
+                    )
                     {
                         selectedCustomerIndex -= 1;
                         var selectedCustomer = customers[selectedCustomerIndex];
 
-                        Console.WriteLine("Selecione um método de pagamento (1 - Dinheiro, 2 - Cartão):");
+                        Console.WriteLine(
+                            "Selecione um método de pagamento (1 - Dinheiro, 2 - Cartão):"
+                        );
                         string paymentMethodInput = Console.ReadLine() ?? string.Empty;
-                        PaymentMethod paymentMethod = paymentMethodInput == "1" ? PaymentMethod.Dinheiro : PaymentMethod.Cartao;
+                        PaymentMethod paymentMethod =
+                            paymentMethodInput == "1"
+                                ? PaymentMethod.Dinheiro
+                                : PaymentMethod.Cartao;
 
                         string productId = selectedProduct.Id.ToString();
                         string customerId = selectedCustomer.Id.ToString();
