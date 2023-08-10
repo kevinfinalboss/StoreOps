@@ -35,7 +35,7 @@ namespace StoreOps.UI
             {
                 AnsiConsole.Render(new FigletText("Products"));
                 AnsiConsole.MarkupLine("[bold blue]========================================[/]");
-                AnsiConsole.MarkupLine("[bold blue]               Menu Principal           [/]");
+                AnsiConsole.MarkupLine("[bold blue]             Menu de Produtos           [/]");
                 AnsiConsole.MarkupLine("[bold blue]========================================[/]");
                 var option = AnsiConsole.Prompt(
                     new SelectionPrompt<string>()
