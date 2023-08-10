@@ -8,11 +8,23 @@ namespace StoreOps.UI
     {
         private readonly ProductService _productService;
         private readonly CategoryService _categoryService;
+        private readonly CustomerService _customerService;
+        private readonly SaleService _saleService;
+        private readonly EmailService _emailService;
 
-        public ProductMenu(ProductService productService, CategoryService categoryService)
+        public ProductMenu(
+            ProductService productService,
+            CategoryService categoryService,
+            CustomerService customerService,
+            SaleService saleService,
+            EmailService emailService
+        )
         {
             _productService = productService;
             _categoryService = categoryService;
+            _customerService = customerService;
+            _saleService = saleService;
+            _emailService = emailService;
         }
 
         public void ShowMenu()
@@ -22,7 +34,7 @@ namespace StoreOps.UI
                 Console.WriteLine("Menu de Produtos:");
                 Console.WriteLine("1 - Registrar Produto");
                 Console.WriteLine("2 - Ver Produtos");
-                Console.WriteLine("3 - Deletar Produto");
+                Console.WriteLine("3 - Vender Produto");
                 Console.WriteLine("0 - Voltar ao Menu Principal");
                 string option = Console.ReadLine() ?? string.Empty;
 
@@ -35,6 +47,7 @@ namespace StoreOps.UI
                         ViewProducts();
                         break;
                     case "3":
+                        SellProduct();
                         break;
                     case "0":
                         return;
@@ -56,7 +69,9 @@ namespace StoreOps.UI
                 var products = _productService.GetProducts();
                 foreach (var product in products)
                 {
-                    Console.WriteLine($"{product.Name} - {product.Description} - {product.Price:C} - {product.Stock} unidades");
+                    Console.WriteLine(
+                        $"{product.Name} - {product.Description} - {product.Price:C} - {product.Stock} unidades"
+                    );
                 }
             }
             else if (option == "2")
@@ -66,7 +81,9 @@ namespace StoreOps.UI
                 var products = _productService.SearchProducts(search);
                 foreach (var product in products)
                 {
-                    Console.WriteLine($"{product.Name} - {product.Description} - {product.Price:C} - {product.Stock} unidades");
+                    Console.WriteLine(
+                        $"{product.Name} - {product.Description} - {product.Price:C} - {product.Stock} unidades"
+                    );
                 }
             }
             else
@@ -139,6 +156,62 @@ namespace StoreOps.UI
                 Console.WriteLine($"Erro ao adicionar produto: {ex.Message}");
             }
         }
+
+        private void SellProduct()
+        {
+            try
+            {
+                Console.WriteLine("Selecione um produto para vender:");
+                var products = _productService.GetProducts();
+                for (int i = 0; i < products.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1} - {products[i].Name} - {products[i].Price:C} - {products[i].Stock} unidades");
+                }
+
+                string selectedProductIndexInput = Console.ReadLine() ?? string.Empty;
+                if (int.TryParse(selectedProductIndexInput, out int selectedProductIndex) && selectedProductIndex > 0 && selectedProductIndex <= products.Count)
+                {
+                    selectedProductIndex -= 1;
+                    var selectedProduct = products[selectedProductIndex];
+
+                    Console.WriteLine("Selecione um cliente:");
+                    var customers = _customerService.GetCustomers();
+                    for (int i = 0; i < customers.Count; i++)
+                    {
+                        Console.WriteLine($"{i + 1} - {customers[i].Name}");
+                    }
+
+                    string selectedCustomerIndexInput = Console.ReadLine() ?? string.Empty;
+                    if (int.TryParse(selectedCustomerIndexInput, out int selectedCustomerIndex) && selectedCustomerIndex > 0 && selectedCustomerIndex <= customers.Count)
+                    {
+                        selectedCustomerIndex -= 1;
+                        var selectedCustomer = customers[selectedCustomerIndex];
+
+                        Console.WriteLine("Selecione um método de pagamento (1 - Dinheiro, 2 - Cartão):");
+                        string paymentMethodInput = Console.ReadLine() ?? string.Empty;
+                        PaymentMethod paymentMethod = paymentMethodInput == "1" ? PaymentMethod.Dinheiro : PaymentMethod.Cartao;
+
+                        string productId = selectedProduct.Id.ToString();
+                        string customerId = selectedCustomer.Id.ToString();
+
+                        _saleService.CreateSale(productId, customerId, paymentMethod);
+
+                        Console.WriteLine("Venda realizada com sucesso!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Índice de cliente fora dos limites!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Índice de produto fora dos limites!");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao vender produto: {ex.Message}");
+            }
+        }
     }
 }
-
