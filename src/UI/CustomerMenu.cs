@@ -58,7 +58,11 @@ namespace StoreOps.UI
             string name = Console.ReadLine() ?? string.Empty;
 
             Console.WriteLine("Informe a idade do cliente:");
-            int age = int.Parse(Console.ReadLine() ?? string.Empty);
+            if (!int.TryParse(Console.ReadLine() ?? string.Empty, out int age))
+            {
+                Console.WriteLine("Idade inválida!");
+                return;
+            }
 
             Console.WriteLine("Informe o CPF do cliente:");
             string cpf = Console.ReadLine() ?? string.Empty;
@@ -69,14 +73,15 @@ namespace StoreOps.UI
             Console.WriteLine("Informe o número de telefone do cliente:");
             string phoneNumber = Console.ReadLine() ?? string.Empty;
 
-            Customer customer = new()
-            {
-                Name = name,
-                Age = age,
-                CPF = cpf,
-                Email = email,
-                PhoneNumber = phoneNumber
-            };
+            Customer customer =
+                new()
+                {
+                    Name = name,
+                    Age = age,
+                    CPF = cpf,
+                    Email = email,
+                    PhoneNumber = phoneNumber
+                };
 
             _customerService.AddCustomer(customer);
 
@@ -90,7 +95,12 @@ namespace StoreOps.UI
             {
                 try
                 {
-                    await emailService.SendEmailAsync(email, subject, name, cancellationTokenSource.Token);
+                    await emailService.SendEmailAsync(
+                        email,
+                        subject,
+                        name,
+                        cancellationTokenSource.Token
+                    );
                     Console.WriteLine("E-mail enviado com sucesso!");
                     break;
                 }
@@ -118,7 +128,9 @@ namespace StoreOps.UI
                     var allCustomers = _customerService.GetCustomers();
                     foreach (var customer in allCustomers)
                     {
-                        Console.WriteLine($"Nome: {customer.Name}, Idade: {customer.Age}, CPF: {customer.CPF}, Email: {customer.Email}, Telefone: {customer.PhoneNumber}");
+                        Console.WriteLine(
+                            $"Nome: {customer.Name}, Idade: {customer.Age}, CPF: {customer.CPF}, Email: {customer.Email}, Telefone: {customer.PhoneNumber}"
+                        );
                     }
                     break;
                 case "2":
@@ -127,7 +139,9 @@ namespace StoreOps.UI
                     var customers = _customerService.SearchCustomers(search);
                     foreach (var customer in customers)
                     {
-                        Console.WriteLine($"Nome: {customer.Name}, Idade: {customer.Age}, CPF: {customer.CPF}, Email: {customer.Email}, Telefone: {customer.PhoneNumber}");
+                        Console.WriteLine(
+                            $"Nome: {customer.Name}, Idade: {customer.Age}, CPF: {customer.CPF}, Email: {customer.Email}, Telefone: {customer.PhoneNumber}"
+                        );
                     }
                     break;
                 case "3":
