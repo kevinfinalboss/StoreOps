@@ -87,10 +87,10 @@ namespace StoreOps.Services
 
                 worksheet.Cells.AutoFitColumns();
 
-                string folderPath = Path.Combine("relatorio", "usuarios");
+                string folderPath = Path.Combine("relatorios", "usuarios");
                 Directory.CreateDirectory(folderPath);
 
-                string fileName = $"relatorio-usuario-{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+                string fileName = $"relatorio de usuarios {DateTime.Now:dd-MM-yyyy}.xlsx";
                 string fullPath = Path.Combine(folderPath, fileName);
 
                 File.WriteAllBytes(fullPath, package.GetAsByteArray());
