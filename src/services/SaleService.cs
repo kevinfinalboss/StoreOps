@@ -57,8 +57,8 @@ namespace StoreOps.Services
             _productService.UpdateProduct(product);
 
             string saleConfirmationHtmlTemplate = File.ReadAllText("./templates/vendasnotifier.html");
-            _ = saleConfirmationHtmlTemplate.Replace("{{NAME}}", customer.Name).Replace("{{PRODUCT_NAME}}", product.Name);
-            _emailService.SendEmailAsync(customer.Email, "Confirmação de Compra", customer.Name, CancellationToken.None).GetAwaiter().GetResult();
+            saleConfirmationHtmlTemplate = saleConfirmationHtmlTemplate.Replace("{{NAME}}", customer.Name).Replace("{{PRODUCT_NAME}}", product.Name);
+            _emailService.SendEmailAsync(customer.Email, "Confirmação de Compra", saleConfirmationHtmlTemplate, CancellationToken.None).GetAwaiter().GetResult();
 
             Console.WriteLine("Venda realizada com sucesso!");
         }
