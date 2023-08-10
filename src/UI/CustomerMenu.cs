@@ -60,7 +60,7 @@ namespace StoreOps.UI
             Console.WriteLine("Informe a idade do cliente:");
             if (!int.TryParse(Console.ReadLine() ?? string.Empty, out int age))
             {
-                Console.WriteLine("Idade inválida!");
+                Console.WriteLine("Idade inválida, apenas números!");
                 return;
             }
 
