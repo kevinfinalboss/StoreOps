@@ -89,8 +89,10 @@ Crie uma branch a partir da master e crie um PR com a atualização.
 
 ## Screenshots
 
-![App Screenshot](https://github.com/kevinfinalboss/StoreOps/blob/master/screenshots/MenuPrincipal.png?raw=true)
+![App Screenshot](https://github.com/kevinfinalboss/StoreOps/blob/master/screenshots/MenuPrincipal.jpg?raw=true)
 ![App Screenshot](https://github.com/kevinfinalboss/StoreOps/blob/master/screenshots/MenuConfigura%C3%A7%C3%A3o.jpg?raw=true)
 ![App Screenshot](https://github.com/kevinfinalboss/StoreOps/blob/master/screenshots/MenuClientes.jpg?raw=true)
+![App Screenshot](https://github.com/kevinfinalboss/StoreOps/blob/master/screenshots/MenuProdutos.jpg?raw=true)
+
 
 
