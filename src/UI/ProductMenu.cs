@@ -1,6 +1,6 @@
+using Spectre.Console;
 using StoreOps.Models;
 using StoreOps.Services;
-using Figgle;
 using System;
 
 namespace StoreOps.UI
@@ -28,37 +28,35 @@ namespace StoreOps.UI
             _emailService = emailService;
         }
 
+        [Obsolete]
         public void ShowMenu()
         {
             while (true)
             {
-                Console.WriteLine(FiggleFonts.Standard.Render("Products"));
-                Console.WriteLine("========================================");
-                Console.WriteLine("               Menu Principal           ");
-                Console.WriteLine("========================================");
-                Console.WriteLine("1 - Registrar Produto");
-                Console.WriteLine("2 - Ver Produtos");
-                Console.WriteLine("3 - Vender Produto");
-                Console.WriteLine("0 - Voltar ao Menu Principal");
-                Console.WriteLine("----------------------------------------");
-                Console.Write("Escolha a opção: ");
-                string option = Console.ReadLine() ?? string.Empty;
+                AnsiConsole.Render(new FigletText("Products"));
+                AnsiConsole.MarkupLine("[bold blue]========================================[/]");
+                AnsiConsole.MarkupLine("[bold blue]               Menu Principal           [/]");
+                AnsiConsole.MarkupLine("[bold blue]========================================[/]");
+                var option = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Escolha uma opção:")
+                        .AddChoices(new[] { "Registrar Produto", "Ver Produtos", "Vender Produto", "Voltar ao Menu Principal" }));
 
                 switch (option)
                 {
-                    case "1":
+                    case "Registrar Produto":
                         AddProduct();
                         break;
-                    case "2":
+                    case "Ver Produtos":
                         ViewProducts();
                         break;
-                    case "3":
+                    case "Vender Produto":
                         SellProduct();
                         break;
-                    case "0":
+                    case "Voltar ao Menu Principal":
                         return;
                     default:
-                        Console.WriteLine("Opção inválida!");
+                        AnsiConsole.MarkupLine("[bold red]Opção inválida![/]");
                         break;
                 }
             }

@@ -1,5 +1,5 @@
+using Spectre.Console;
 using StoreOps.Services;
-using Figgle;
 
 namespace StoreOps.UI
 {
@@ -16,37 +16,35 @@ namespace StoreOps.UI
             _configurationMenu = new ConfigurationMenu(categoryService);
         }
 
+        [Obsolete]
         public void ShowMenu()
         {
             while (true)
             {
-                Console.WriteLine(FiggleFonts.Standard.Render("StoreOps"));
-                Console.WriteLine("========================================");
-                Console.WriteLine("               Menu Principal           ");
-                Console.WriteLine("========================================");
-                Console.WriteLine("1 - Produtos");
-                Console.WriteLine("2 - Clientes");
-                Console.WriteLine("3 - Configurações");
-                Console.WriteLine("0 - Sair");
-                Console.WriteLine("----------------------------------------");
-                Console.Write("Escolha a opção: ");
-                string option = Console.ReadLine() ?? string.Empty;
+                AnsiConsole.Render(new FigletText("StoreOps"));
+                AnsiConsole.MarkupLine("[bold blue]========================================[/]");
+                AnsiConsole.MarkupLine("[bold blue]               Menu Principal           [/]");
+                AnsiConsole.MarkupLine("[bold blue]========================================[/]");
+                var option = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Escolha uma opção:")
+                        .AddChoices(new[] { "Produtos", "Clientes", "Configurações", "Sair" }));
 
                 switch (option)
                 {
-                    case "1":
+                    case "Produtos":
                         _productMenu.ShowMenu();
                         break;
-                    case "2":
+                    case "Clientes":
                         _customerMenu.ShowMenu().GetAwaiter().GetResult();
                         break;
-                    case "3":
+                    case "Configurações":
                         _configurationMenu.ShowMenu();
                         break;
-                    case "0":
+                    case "Sair":
                         return;
                     default:
-                        Console.WriteLine("Opção inválida!");
+                        AnsiConsole.MarkupLine("[bold red]Opção inválida![/]");
                         break;
                 }
             }

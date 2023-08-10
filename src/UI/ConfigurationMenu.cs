@@ -1,6 +1,6 @@
+using Spectre.Console;
 using StoreOps.Models;
 using StoreOps.Services;
-using Figgle;
 
 namespace StoreOps.UI
 {
@@ -17,25 +17,24 @@ namespace StoreOps.UI
         {
             while (true)
             {
-                Console.WriteLine(FiggleFonts.Standard.Render("Configuration"));
-                Console.WriteLine("========================================");
-                Console.WriteLine("         Menu de Configurações          ");
-                Console.WriteLine("========================================");
-                Console.WriteLine("1 - Adicionar Categoria");
-                Console.WriteLine("0 - Voltar ao Menu Principal");
-                Console.WriteLine("----------------------------------------");
-                Console.Write("Escolha a opção: ");
-                string option = Console.ReadLine() ?? string.Empty;
+                AnsiConsole.Render(new FigletText("Configuration"));
+                AnsiConsole.MarkupLine("[bold blue]========================================[/]");
+                AnsiConsole.MarkupLine("[bold blue]         Menu de Configurações          [/]");
+                AnsiConsole.MarkupLine("[bold blue]========================================[/]");
+                var option = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Escolha uma opção:")
+                        .AddChoices(new[] { "Adicionar Categoria", "Voltar ao Menu Principal" }));
 
                 switch (option)
                 {
-                    case "1":
+                    case "Adicionar Categoria":
                         AddCategory();
                         break;
-                    case "0":
+                    case "Voltar ao Menu Principal":
                         return;
                     default:
-                        Console.WriteLine("Opção inválida!");
+                        AnsiConsole.MarkupLine("[bold red]Opção inválida![/]");
                         break;
                 }
             }
@@ -45,21 +44,18 @@ namespace StoreOps.UI
         {
             try
             {
-                Console.WriteLine("Informe o nome da categoria:");
-                string name = Console.ReadLine() ?? string.Empty;
-
-                Console.WriteLine("Informe a descrição da categoria:");
-                string description = Console.ReadLine() ?? string.Empty;
+                string name = AnsiConsole.Ask<string>("Informe o nome da categoria:");
+                string description = AnsiConsole.Ask<string>("Informe a descrição da categoria:");
 
                 Category category = new() { Name = name, Description = description };
 
                 _categoryService.AddCategory(category);
 
-                Console.WriteLine("Categoria adicionada com sucesso!");
+                AnsiConsole.MarkupLine("[bold green]Categoria adicionada com sucesso![/]");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao adicionar categoria: {ex.Message}");
+                AnsiConsole.MarkupLine($"[bold red]Erro ao adicionar categoria: {ex.Message}[/]");
             }
         }
     }

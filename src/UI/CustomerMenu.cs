@@ -1,6 +1,6 @@
+using Spectre.Console;
 using StoreOps.Models;
 using StoreOps.Services;
-using Figgle;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,33 +20,39 @@ namespace StoreOps.UI
         {
             while (true)
             {
-                Console.WriteLine(FiggleFonts.Standard.Render("Customers"));
-                Console.WriteLine("========================================");
-                Console.WriteLine("           Menu de Clientes             ");
-                Console.WriteLine("========================================");
-                Console.WriteLine("1 - Adicionar Cliente");
-                Console.WriteLine("2 - Ver Clientes");
-                Console.WriteLine("3 - Deletar Clientes");
-                Console.WriteLine("0 - Voltar ao Menu Principal");
-                Console.WriteLine("----------------------------------------");
-                Console.Write("Escolha a opção: ");
-                string option = Console.ReadLine() ?? string.Empty;
+                AnsiConsole.Render(new FigletText("Customers"));
+                AnsiConsole.MarkupLine("[bold blue]========================================[/]");
+                AnsiConsole.MarkupLine("[bold blue]           Menu de Clientes             [/]");
+                AnsiConsole.MarkupLine("[bold blue]========================================[/]");
+                var option = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Escolha uma opção:")
+                        .AddChoices(
+                            new[]
+                            {
+                                "Adicionar Cliente",
+                                "Ver Clientes",
+                                "Deletar Clientes",
+                                "Voltar ao Menu Principal"
+                            }
+                        )
+                );
 
                 switch (option)
                 {
-                    case "1":
+                    case "Adicionar Cliente":
                         await AddCustomer();
                         break;
-                    case "2":
+                    case "Ver Clientes":
                         ViewCustomers();
                         break;
-                    case "3":
+                    case "Deletar Clientes":
                         DeleteCustomer();
                         break;
-                    case "0":
+                    case "Voltar ao Menu Principal":
                         return;
                     default:
-                        Console.WriteLine("Opção inválida!");
+                        AnsiConsole.MarkupLine("[bold red]Opção inválida![/]");
                         break;
                 }
             }
