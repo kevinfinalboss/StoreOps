@@ -109,6 +109,7 @@ namespace StoreOps.UI
         {
             Console.WriteLine("1 - Ver todos os clientes");
             Console.WriteLine("2 - Pesquisar cliente");
+            Console.WriteLine("3 - Gerar relatório de clientes");
             string option = Console.ReadLine() ?? string.Empty;
 
             switch (option)
@@ -128,6 +129,11 @@ namespace StoreOps.UI
                     {
                         Console.WriteLine($"Nome: {customer.Name}, Idade: {customer.Age}, CPF: {customer.CPF}, Email: {customer.Email}, Telefone: {customer.PhoneNumber}");
                     }
+                    break;
+                case "3":
+                    _customerService.GenerateCustomerReport();
+                    string folderPath = Path.Combine("relatorio", "usuarios");
+                    Console.WriteLine($"Relatório gerado com sucesso em {folderPath}");
                     break;
                 default:
                     Console.WriteLine("Opção inválida!");
