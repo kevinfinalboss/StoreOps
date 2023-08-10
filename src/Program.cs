@@ -13,8 +13,10 @@ namespace StoreOps
             var categoryService = new CategoryService(databaseConnection);
             var productService = new ProductService(databaseConnection);
             var customerService = new CustomerService(databaseConnection);
+            var emailService = new EmailService(); 
+            var saleService = new SaleService(databaseConnection, productService, customerService, emailService); // Corrigido aqui
 
-            var menu = new Menu(categoryService, productService, customerService);
+            var menu = new Menu(categoryService, productService, customerService, saleService, emailService);
             menu.ShowMenu();
         }
     }
