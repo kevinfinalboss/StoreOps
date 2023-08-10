@@ -17,7 +17,6 @@ namespace StoreOps.UI
         {
             while (true)
             {
-                Console.Clear();
                 Console.WriteLine(FiggleFonts.Standard.Render("Configuration"));
                 Console.WriteLine("========================================");
                 Console.WriteLine("         Menu de Configurações          ");

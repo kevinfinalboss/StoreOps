@@ -20,7 +20,6 @@ namespace StoreOps.UI
         {
             while (true)
             {
-                Console.Clear();
                 Console.WriteLine(FiggleFonts.Standard.Render("Customers"));
                 Console.WriteLine("========================================");
                 Console.WriteLine("           Menu de Clientes             ");

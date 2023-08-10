@@ -1,5 +1,6 @@
 using StoreOps.Models;
 using StoreOps.Services;
+using Figgle;
 using System;
 
 namespace StoreOps.UI
@@ -30,12 +31,17 @@ namespace StoreOps.UI
         public void ShowMenu()
         {
             while (true)
-            {
-                Console.WriteLine("Menu de Produtos:");
+            {   
+                Console.WriteLine(FiggleFonts.Standard.Render("Products"));
+                Console.WriteLine("========================================");
+                Console.WriteLine("               Menu Principal           ");
+                Console.WriteLine("========================================");
                 Console.WriteLine("1 - Registrar Produto");
                 Console.WriteLine("2 - Ver Produtos");
                 Console.WriteLine("3 - Vender Produto");
                 Console.WriteLine("0 - Voltar ao Menu Principal");
+                Console.WriteLine("----------------------------------------");
+                Console.Write("Escolha a opção: ");
                 string option = Console.ReadLine() ?? string.Empty;
 
                 switch (option)
