@@ -6,6 +6,7 @@ using StoreOps.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using OfficeOpenXml.Drawing.Chart;
 
 namespace StoreOps.Services
 {
@@ -63,38 +64,43 @@ namespace StoreOps.Services
         public void GenerateCustomerReport()
         {
             var customers = GetCustomers();
+            using var package = new ExcelPackage();
+            var worksheet = package.Workbook.Worksheets.Add("Clientes");
+            worksheet.Cells[1, 1].Value = "Nome";
+            worksheet.Cells[1, 2].Value = "Idade";
+            worksheet.Cells[1, 3].Value = "CPF";
+            worksheet.Cells[1, 4].Value = "Email";
+            worksheet.Cells[1, 5].Value = "Telefone";
+            worksheet.Cells[1, 1, 1, 5].Style.Font.Bold = true;
 
-            using (var package = new ExcelPackage())
+            int totalAge = 0;
+            for (int i = 0; i < customers.Count; i++)
             {
-                var worksheet = package.Workbook.Worksheets.Add("Clientes");
-
-                worksheet.Cells[1, 1].Value = "Nome";
-                worksheet.Cells[1, 2].Value = "Idade";
-                worksheet.Cells[1, 3].Value = "CPF";
-                worksheet.Cells[1, 4].Value = "Email";
-                worksheet.Cells[1, 5].Value = "Telefone";
-                worksheet.Cells[1, 1, 1, 5].Style.Font.Bold = true;
-
-                for (int i = 0; i < customers.Count; i++)
-                {
-                    var customer = customers[i];
-                    worksheet.Cells[i + 2, 1].Value = customer.Name;
-                    worksheet.Cells[i + 2, 2].Value = customer.Age;
-                    worksheet.Cells[i + 2, 3].Value = customer.CPF;
-                    worksheet.Cells[i + 2, 4].Value = customer.Email;
-                    worksheet.Cells[i + 2, 5].Value = customer.PhoneNumber;
-                }
-
-                worksheet.Cells.AutoFitColumns();
-
-                string folderPath = Path.Combine("relatorios", "usuarios");
-                Directory.CreateDirectory(folderPath);
-
-                string fileName = $"relatorio de usuarios {DateTime.Now:dd-MM-yyyy}.xlsx";
-                string fullPath = Path.Combine(folderPath, fileName);
-
-                File.WriteAllBytes(fullPath, package.GetAsByteArray());
+                var customer = customers[i];
+                worksheet.Cells[i + 2, 1].Value = customer.Name;
+                worksheet.Cells[i + 2, 2].Value = customer.Age;
+                worksheet.Cells[i + 2, 3].Value = customer.CPF;
+                worksheet.Cells[i + 2, 4].Value = customer.Email;
+                worksheet.Cells[i + 2, 5].Value = customer.PhoneNumber;
+                totalAge += customer.Age;
             }
+
+            worksheet.Cells.AutoFitColumns();
+
+            var pieChart = worksheet.Drawings.AddChart("MediaIdade", eChartType.Pie) as ExcelPieChart;
+            pieChart.Title.Text = "Média de Idade dos Clientes";
+            pieChart.Series.Add(
+                ExcelRange.GetAddress(2, 2, customers.Count + 1, 2),
+                ExcelCellBase.GetAddress(2, 1, customers.Count + 1, 1)
+            );
+            pieChart.SetPosition(5, 0, 6, 0);
+            pieChart.SetSize(400, 400);
+
+            string folderPath = Path.Combine("relatorios", "usuarios");
+            Directory.CreateDirectory(folderPath);
+            string fileName = $"relatorio de usuarios {DateTime.Now:dd-MM-yyyy}.xlsx";
+            string fullPath = Path.Combine(folderPath, fileName);
+            File.WriteAllBytes(fullPath, package.GetAsByteArray());
         }
 
         private bool IsValidEmail(string email)
