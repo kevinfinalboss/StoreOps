@@ -16,6 +16,7 @@ namespace StoreOps.UI
             _customerService = customerService;
         }
 
+        [Obsolete]
         public async Task ShowMenu()
         {
             while (true)
