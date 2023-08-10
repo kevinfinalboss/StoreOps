@@ -1,4 +1,5 @@
 using StoreOps.Services;
+using Figgle;
 
 namespace StoreOps.UI
 {
@@ -19,11 +20,17 @@ namespace StoreOps.UI
         {
             while (true)
             {
-                Console.WriteLine("Menu Principal:");
+                Console.Clear();
+                Console.WriteLine(FiggleFonts.Standard.Render("StoreOps"));
+                Console.WriteLine("========================================");
+                Console.WriteLine("               Menu Principal           ");
+                Console.WriteLine("========================================");
                 Console.WriteLine("1 - Produtos");
                 Console.WriteLine("2 - Clientes");
                 Console.WriteLine("3 - Configurações");
                 Console.WriteLine("0 - Sair");
+                Console.WriteLine("----------------------------------------");
+                Console.Write("Escolha a opção: ");
                 string option = Console.ReadLine() ?? string.Empty;
 
                 switch (option)

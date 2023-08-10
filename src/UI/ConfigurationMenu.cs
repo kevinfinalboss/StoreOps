@@ -1,5 +1,6 @@
 using StoreOps.Models;
 using StoreOps.Services;
+using Figgle;
 
 namespace StoreOps.UI
 {
@@ -16,9 +17,15 @@ namespace StoreOps.UI
         {
             while (true)
             {
-                Console.WriteLine("Menu de Configurações:");
+                Console.Clear();
+                Console.WriteLine(FiggleFonts.Standard.Render("Configuration"));
+                Console.WriteLine("========================================");
+                Console.WriteLine("         Menu de Configurações          ");
+                Console.WriteLine("========================================");
                 Console.WriteLine("1 - Adicionar Categoria");
                 Console.WriteLine("0 - Voltar ao Menu Principal");
+                Console.WriteLine("----------------------------------------");
+                Console.Write("Escolha a opção: ");
                 string option = Console.ReadLine() ?? string.Empty;
 
                 switch (option)

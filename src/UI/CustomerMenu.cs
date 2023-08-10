@@ -1,5 +1,6 @@
 using StoreOps.Models;
 using StoreOps.Services;
+using Figgle;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,11 +20,17 @@ namespace StoreOps.UI
         {
             while (true)
             {
-                Console.WriteLine("Menu de Clientes:");
+                Console.Clear();
+                Console.WriteLine(FiggleFonts.Standard.Render("Customers"));
+                Console.WriteLine("========================================");
+                Console.WriteLine("           Menu de Clientes             ");
+                Console.WriteLine("========================================");
                 Console.WriteLine("1 - Adicionar Cliente");
                 Console.WriteLine("2 - Ver Clientes");
                 Console.WriteLine("3 - Deletar Clientes");
                 Console.WriteLine("0 - Voltar ao Menu Principal");
+                Console.WriteLine("----------------------------------------");
+                Console.Write("Escolha a opção: ");
                 string option = Console.ReadLine() ?? string.Empty;
 
                 switch (option)
