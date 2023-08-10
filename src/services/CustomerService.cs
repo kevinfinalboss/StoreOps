@@ -2,7 +2,6 @@ using MongoDB.Driver;
 using StoreOps.Database;
 using MongoDB.Bson;
 using StoreOps.Models;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace StoreOps.Services
@@ -18,7 +17,8 @@ namespace StoreOps.Services
 
         public Customer AddCustomer(Customer customer)
         {
-            if (!IsValidEmail(customer.Email)) throw new FormatException("Email inválido");
+            if (!IsValidEmail(customer.Email))
+                throw new FormatException("Email inválido");
 
             customer.CPF = FormatCPF(customer.CPF);
             customer.PhoneNumber = FormatPhoneNumber(customer.PhoneNumber);
@@ -34,17 +34,27 @@ namespace StoreOps.Services
 
         public List<Customer> SearchCustomers(string search)
         {
-            return _customers.Find(customer =>
-                customer.Name.Contains(search) ||
-                customer.Age.ToString().Contains(search) ||
-                customer.CPF.Contains(search) ||
-                customer.Email.Contains(search) ||
-                customer.PhoneNumber.Contains(search)).ToList();
+            return _customers
+                .Find(
+                    customer =>
+                        customer.Name.Contains(search)
+                        || customer.Age.ToString().Contains(search)
+                        || customer.CPF.Contains(search)
+                        || customer.Email.Contains(search)
+                        || customer.PhoneNumber.Contains(search)
+                )
+                .ToList();
         }
 
         public void DeleteCustomer(ObjectId id)
         {
             _customers.DeleteOne(customer => customer.Id == id);
+        }
+
+        public Customer GetCustomerById(string customerId)
+        {
+            var objectId = new ObjectId(customerId);
+            return _customers.Find(customer => customer.Id == objectId).FirstOrDefault();
         }
 
         private bool IsValidEmail(string email)
