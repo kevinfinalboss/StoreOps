@@ -13,6 +13,7 @@ namespace StoreOps.UI
             _categoryService = categoryService;
         }
 
+        [Obsolete]
         public void ShowMenu()
         {
             while (true)
