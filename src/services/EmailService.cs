@@ -10,7 +10,6 @@ namespace StoreOps.Services
     public class EmailService
     {
         private readonly SmtpClient _smtpClient;
-        private readonly string _userCreateHtmlTemplate;
 
         public EmailService()
         {
@@ -27,18 +26,15 @@ namespace StoreOps.Services
                 EnableSsl = enableSsl,
                 Credentials = new NetworkCredential(username, password)
             };
-
-            _userCreateHtmlTemplate = File.ReadAllText("./templates/usercreate.html");
         }
 
         public async Task SendEmailAsync(
             string to,
             string subject,
-            string userName,
+            string htmlBody,
             CancellationToken cancellationToken
         )
         {
-            string htmlBody = _userCreateHtmlTemplate.Replace("{{NAME}}", userName);
             var message = new MailMessage
             {
                 From = new MailAddress("noreply@kevindev.com.br"),
