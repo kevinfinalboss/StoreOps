@@ -45,5 +45,14 @@ namespace StoreOps.Services
                 )
                 .ToList();
         }
+
+        public Product GetProductById(string productId)
+        {
+            return _products.Find(product => product.Id == productId).FirstOrDefault();
+        }
+        public void UpdateProduct(Product product)
+        {
+            _products.ReplaceOne(p => p.Id == product.Id, product);
+        }
     }
 }
