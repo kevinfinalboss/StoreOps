@@ -6,8 +6,8 @@ namespace StoreOps.Models
 {
     public enum PaymentMethod
     {
-        Cash,
-        Card
+        Dinheiro,
+        Cartao
     }
 
     public class Sale
@@ -22,7 +22,14 @@ namespace StoreOps.Models
         [BsonElement("CustomerId")]
         public string CustomerId { get; set; }
 
+        [BsonElement("ProductName")]
+        public string ProductName { get; set; }
+
+        [BsonElement("CustomerName")]
+        public string CustomerName { get; set; } 
+
         [BsonElement("PaymentMethod")]
+        [BsonRepresentation(BsonType.String)]
         public PaymentMethod PaymentMethod { get; set; }
 
         [BsonElement("SaleDate")]
