@@ -195,8 +195,6 @@ namespace StoreOps.UI
                         string customerId = selectedCustomer.Id.ToString();
 
                         _saleService.CreateSale(productId, customerId, paymentMethod);
-
-                        Console.WriteLine("Venda realizada com sucesso!");
                     }
                     else
                     {
