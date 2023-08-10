@@ -12,5 +12,6 @@
     <PackageReference Include="EPPlus" Version="5.7.5" />
     <PackageReference Include="Figgle" Version="0.5.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.20.0" />
+    <PackageReference Include="Spectre.Console" Version="0.47.0" />
   </ItemGroup>
 </Project>
