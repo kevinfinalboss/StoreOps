@@ -14,19 +14,19 @@ namespace StoreOps.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [BsonElement("ProductId")]
-        public string ProductId { get; set; }
+        public required string ProductId { get; set; }
 
         [BsonElement("CustomerId")]
-        public string CustomerId { get; set; }
+        public required string CustomerId { get; set; }
 
         [BsonElement("ProductName")]
-        public string ProductName { get; set; }
+        public required string ProductName { get; set; }
 
         [BsonElement("CustomerName")]
-        public string CustomerName { get; set; } 
+        public required string CustomerName { get; set; } 
 
         [BsonElement("PaymentMethod")]
         [BsonRepresentation(BsonType.String)]
@@ -36,9 +36,9 @@ namespace StoreOps.Models
         public DateTime SaleDate { get; set; }
 
         [BsonIgnore]
-        public Product Product { get; set; }
+        public required Product Product { get; set; }
 
         [BsonIgnore]
-        public Customer Customer { get; set; }
+        public required Customer Customer { get; set; }
     }
 }
