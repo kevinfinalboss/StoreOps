@@ -111,14 +111,14 @@ namespace StoreOps.UI
                 Console.WriteLine("Informe o preço do produto:");
                 if (!decimal.TryParse(Console.ReadLine() ?? string.Empty, out decimal price))
                 {
-                    Console.WriteLine("Preço inválido!");
+                    Console.WriteLine("Preço inválido!, apenas números.ok tks");
                     return;
                 }
 
                 Console.WriteLine("Informe o estoque do produto:");
                 if (!int.TryParse(Console.ReadLine() ?? string.Empty, out int stock))
                 {
-                    Console.WriteLine("Estoque inválido!");
+                    Console.WriteLine("Estoque inválido!, apenas números");
                     return;
                 }
 
