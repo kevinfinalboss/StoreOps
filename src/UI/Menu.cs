@@ -12,7 +12,7 @@ namespace StoreOps.UI
         public Menu(CategoryService categoryService, ProductService productService, CustomerService customerService, SaleService saleService, EmailService emailService)
         {
             _productMenu = new ProductMenu(productService, categoryService, customerService, saleService, emailService);
-            _customerMenu = new CustomerMenu(customerService);
+            _customerMenu = new CustomerMenu(customerService, emailService);
             _configurationMenu = new ConfigurationMenu(categoryService);
         }
 
