@@ -181,6 +181,55 @@ namespace StoreOps.UI
             }
         }
 
-        private void DeleteCustomer() { }
+        private void DeleteCustomer()
+        {
+            AnsiConsole.MarkupLine("[bold blue]Deletar Cliente[/]");
+            var customers = _customerService.GetCustomers();
+            var customerChoices = new List<string>();
+
+            foreach (var customer in customers)
+            {
+                customerChoices.Add($"Nome: {customer.Name}, CPF: {customer.CPF}");
+            }
+
+            string selectedCustomer = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Selecione o cliente que deseja deletar:")
+                    .PageSize(10)
+                    .AddChoices(customerChoices)
+            );
+
+            int index = customerChoices.IndexOf(selectedCustomer);
+            var customerToDelete = customers[index];
+
+            string confirmName = AnsiConsole.Ask<string>(
+                $"Digite o nome completo de '{customerToDelete.Name}' para confirmar a exclusão:"
+            );
+
+            if (confirmName != customerToDelete.Name)
+            {
+                AnsiConsole.MarkupLine("[red]Nome incorreto. Ação cancelada.[/]");
+                return;
+            }
+
+            _customerService.DeleteCustomer(customerToDelete.Id);
+
+            string farewellHtmlTemplate = File.ReadAllText("./templates/userdelete.html");
+            farewellHtmlTemplate = farewellHtmlTemplate.Replace("{{NAME}}", customerToDelete.Name);
+            string subject = "Conta Excluída no StoreOps";
+            _emailService
+                .SendEmailAsync(
+                    customerToDelete.Email,
+                    subject,
+                    farewellHtmlTemplate,
+                    CancellationToken.None
+                )
+                .GetAwaiter()
+                .GetResult();
+
+            AnsiConsole.MarkupLine(
+                "[green]Cliente excluído e e-mail de confirmação enviado com sucesso![/]"
+            );
+        }
     }
 }
