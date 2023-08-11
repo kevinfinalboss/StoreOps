@@ -13,10 +13,12 @@ namespace StoreOps.Services
     public partial class CustomerService
     {
         private readonly IMongoCollection<Customer> _customers;
+         private readonly EmailService _emailService;
 
-        public CustomerService(DatabaseConnection databaseConnection)
+        public CustomerService(DatabaseConnection databaseConnection, EmailService emailService)
         {
             _customers = databaseConnection.Database.GetCollection<Customer>("customers");
+            _emailService = emailService;
         }
 
         public Customer AddCustomer(Customer customer)
@@ -50,6 +52,22 @@ namespace StoreOps.Services
                 .ToList();
         }
 
+
+                public void SendWelcomeEmail(string customerId)
+        {
+            var customer = GetCustomerById(customerId);
+            if (customer == null)
+            {
+                Console.WriteLine("Cliente não encontrado!");
+                return;
+            }
+
+            string welcomeHtmlTemplate = File.ReadAllText("./templates/usercreate.html");
+            welcomeHtmlTemplate = welcomeHtmlTemplate.Replace("{{NAME}}", customer.Name);
+            _emailService.SendEmailAsync(customer.Email, "Bem-vindo!", welcomeHtmlTemplate, CancellationToken.None).GetAwaiter().GetResult();
+
+            Console.WriteLine("E-mail de boas-vindas enviado com sucesso!");
+        }
         public void DeleteCustomer(ObjectId id)
         {
             _customers.DeleteOne(customer => customer.Id == id);
