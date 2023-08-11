@@ -1,9 +1,6 @@
 using Spectre.Console;
 using StoreOps.Models;
 using StoreOps.Services;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace StoreOps.UI
 {
@@ -61,24 +58,27 @@ namespace StoreOps.UI
 
         private async Task AddCustomer()
         {
-            Console.WriteLine("Informe o nome do cliente:");
-            string name = Console.ReadLine() ?? string.Empty;
+            string name = AnsiConsole.Ask<string>("Informe o nome do cliente:");
 
-            Console.WriteLine("Informe a idade do cliente:");
-            if (!int.TryParse(Console.ReadLine() ?? string.Empty, out int age))
+            int age;
+            while (true)
             {
-                Console.WriteLine("Idade inválida, apenas números!");
-                return;
+                string ageString = AnsiConsole.Ask<string>("Informe a idade do cliente:");
+                if (int.TryParse(ageString, out age))
+                {
+                    break;
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine("[red]Idade inválida, apenas números![/]");
+                }
             }
 
-            Console.WriteLine("Informe o CPF do cliente:");
-            string cpf = Console.ReadLine() ?? string.Empty;
-
-            Console.WriteLine("Informe o e-mail do cliente:");
-            string email = Console.ReadLine() ?? string.Empty;
-
-            Console.WriteLine("Informe o número de telefone do cliente:");
-            string phoneNumber = Console.ReadLine() ?? string.Empty;
+            string cpf = AnsiConsole.Ask<string>("Informe o CPF do cliente:");
+            string email = AnsiConsole.Ask<string>("Informe o e-mail do cliente:");
+            string phoneNumber = AnsiConsole.Ask<string>(
+                "Informe o número de telefone do cliente:"
+            );
 
             Customer customer =
                 new()
@@ -92,7 +92,7 @@ namespace StoreOps.UI
 
             _customerService.AddCustomer(customer);
 
-            Console.WriteLine("Cliente adicionado com sucesso!");
+            AnsiConsole.MarkupLine("[green]Cliente adicionado com sucesso![/]");
 
             var emailService = new EmailService();
             string subject = "Bem-vindo ao StoreOps!";
@@ -108,56 +108,69 @@ namespace StoreOps.UI
                         name,
                         cancellationTokenSource.Token
                     );
-                    Console.WriteLine("E-mail enviado com sucesso!");
+                    AnsiConsole.MarkupLine("[green]E-mail enviado com sucesso![/]");
                     break;
                 }
                 catch (OperationCanceledException)
                 {
-                    Console.WriteLine("Erro ao enviar e-mail: a operação atingiu o tempo limite.");
+                    AnsiConsole.MarkupLine(
+                        "[red]Erro ao enviar e-mail: a operação atingiu o tempo limite.[/]"
+                    );
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Erro ao enviar e-mail: {ex.Message}");
+                    AnsiConsole.MarkupLine($"[red]Erro ao enviar e-mail: {ex.Message}[/]");
                 }
             }
         }
 
         private void ViewCustomers()
         {
-            Console.WriteLine("1 - Ver todos os clientes");
-            Console.WriteLine("2 - Pesquisar cliente");
-            Console.WriteLine("3 - Gerar relatório de clientes");
-            string option = Console.ReadLine() ?? string.Empty;
+            var option = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("Escolha uma opção:")
+                    .AddChoices(
+                        new[]
+                        {
+                            "Ver todos os clientes",
+                            "Pesquisar cliente",
+                            "Gerar relatório de clientes"
+                        }
+                    )
+            );
 
             switch (option)
             {
-                case "1":
+                case "Ver todos os clientes":
                     var allCustomers = _customerService.GetCustomers();
                     foreach (var customer in allCustomers)
                     {
-                        Console.WriteLine(
+                        AnsiConsole.MarkupLine(
                             $"Nome: {customer.Name}, Idade: {customer.Age}, CPF: {customer.CPF}, Email: {customer.Email}, Telefone: {customer.PhoneNumber}"
                         );
                     }
                     break;
-                case "2":
-                    Console.WriteLine("Digite a pesquisa (nome, idade, CPF, email, telefone):");
-                    string search = Console.ReadLine() ?? string.Empty;
+                case "Pesquisar cliente":
+                    string search = AnsiConsole.Ask<string>(
+                        "Digite a pesquisa (nome, idade, CPF, email, telefone):"
+                    );
                     var customers = _customerService.SearchCustomers(search);
                     foreach (var customer in customers)
                     {
-                        Console.WriteLine(
+                        AnsiConsole.MarkupLine(
                             $"Nome: {customer.Name}, Idade: {customer.Age}, CPF: {customer.CPF}, Email: {customer.Email}, Telefone: {customer.PhoneNumber}"
                         );
                     }
                     break;
-                case "3":
+                case "Gerar relatório de clientes":
                     _customerService.GenerateCustomerReport();
                     string folderPath = Path.Combine("relatorio", "usuarios");
-                    Console.WriteLine($"Relatório gerado com sucesso em {folderPath}");
+                    AnsiConsole.MarkupLine(
+                        $"[green]Relatório gerado com sucesso em {folderPath}[/]"
+                    );
                     break;
                 default:
-                    Console.WriteLine("Opção inválida!");
+                    AnsiConsole.MarkupLine("[red]Opção inválida![/]");
                     break;
             }
         }
