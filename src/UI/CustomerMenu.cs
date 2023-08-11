@@ -1,16 +1,22 @@
 using Spectre.Console;
 using StoreOps.Models;
 using StoreOps.Services;
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace StoreOps.UI
 {
     class CustomerMenu
     {
         private readonly CustomerService _customerService;
+        private readonly EmailService _emailService;
 
-        public CustomerMenu(CustomerService customerService)
+        public CustomerMenu(CustomerService customerService, EmailService emailService)
         {
             _customerService = customerService;
+            _emailService = emailService;
         }
 
         [Obsolete]
@@ -59,7 +65,6 @@ namespace StoreOps.UI
         private async Task AddCustomer()
         {
             string name = AnsiConsole.Ask<string>("Informe o nome do cliente:");
-
             int age;
             while (true)
             {
@@ -91,10 +96,11 @@ namespace StoreOps.UI
                 };
 
             _customerService.AddCustomer(customer);
-
             AnsiConsole.MarkupLine("[green]Cliente adicionado com sucesso![/]");
 
-            var emailService = new EmailService();
+            string welcomeHtmlTemplate = File.ReadAllText("./templates/usercreate.html");
+            welcomeHtmlTemplate = welcomeHtmlTemplate.Replace("{{NAME}}", customer.Name);
+
             string subject = "Bem-vindo ao StoreOps!";
             var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(15));
 
@@ -102,10 +108,10 @@ namespace StoreOps.UI
             {
                 try
                 {
-                    await emailService.SendEmailAsync(
+                    await _emailService.SendEmailAsync(
                         email,
                         subject,
-                        name,
+                        welcomeHtmlTemplate,
                         cancellationTokenSource.Token
                     );
                     AnsiConsole.MarkupLine("[green]E-mail enviado com sucesso![/]");
