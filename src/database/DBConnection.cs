@@ -1,6 +1,7 @@
 using System;
 using MongoDB.Driver;
 using dotenv.net;
+using Polly;
 
 namespace StoreOps.Database
 {
@@ -27,7 +28,12 @@ namespace StoreOps.Database
                 }
 
                 var settings = MongoClientSettings.FromUrl(new MongoUrl(connectionString));
-                var client = new MongoClient(settings);
+                
+    
+                settings.MaxConnectionPoolSize = 100;
+                settings.MinConnectionPoolSize = 10;
+
+                var client = CreateMongoClientWithRetryPolicy(settings);
                 
                 Database = client.GetDatabase(databaseName);
 
@@ -38,6 +44,19 @@ namespace StoreOps.Database
                 Console.WriteLine($"Erro ao se conectar ao banco de dados: {ex.Message}");
                 Environment.Exit(-1);
             }
+        }
+
+        private static MongoClient CreateMongoClientWithRetryPolicy(MongoClientSettings settings)
+        {
+            var policy = Policy.Handle<TimeoutException>()
+                               .WaitAndRetry(new[]
+                               {
+                                   TimeSpan.FromSeconds(1),
+                                   TimeSpan.FromSeconds(2),
+                                   TimeSpan.FromSeconds(3)
+                               });
+
+            return policy.Execute(() => new MongoClient(settings));
         }
     }
 }
