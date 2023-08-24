@@ -15,4 +15,9 @@
     <PackageReference Include="Polly" Version="7.2.4" />
     <PackageReference Include="Spectre.Console" Version="0.47.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".\.env" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
