@@ -6,6 +6,7 @@ namespace StoreOps
 {
     class Program
     {
+        [Obsolete]
         static void Main(string[] args)
         {
             Console.WriteLine("Bem-vindo ao StoreOps");
